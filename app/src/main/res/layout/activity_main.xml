@@ -1,9 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity" >
+    >
 
     <EditText
         android:id="@+id/et_username"
@@ -17,7 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="请输入密码"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:text="123456" />
 
     <Button
         android:layout_width="wrap_content"
@@ -30,5 +30,12 @@
         android:layout_height="wrap_content"
         android:onClick="postclick"
         android:text="POST方式登录" />
+
+    <Button
+        android:id="@+id/jsonclick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="jsonclick"
+        android:text="POST方式提交JSON数据" />
 
 </LinearLayout>
