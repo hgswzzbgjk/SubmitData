@@ -13,6 +13,9 @@ import com.google.gson.JsonParser;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MainActivity extends Activity {
 	private EditText et_username;
 	private EditText et_password;
@@ -125,6 +128,45 @@ public class MainActivity extends Activity {
 			};
 		}.start();
 	}
+	//HttpURLConnection POST x-www-form-urlencoded方式
+	public void wwwclick(View view) {
+		//首先获取界面用户输入的用户名和密码
+		final String username = et_username.getText().toString().trim();
+		final String password = et_password.getText().toString().trim();
 
+		//参数
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("username", username);
+		params.put("password", password);
+		final String wwwstr=LoginUtils.getRequestData(params, "utf-8").toString();
+		Log.v("MainActivityjsonstr", wwwstr);
+		new Thread() {//开启子线程访问网络
+			public void run() {
+				//调用LoginService里面的方法访问网络
+				final String result = LoginUtils.loginByWWW(wwwstr);
+				if (result != null) {
+					//ui线程更改界面
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(MainActivity.this, result, Toast.LENGTH_SHORT).show();
+							Log.i("MainActivityresult", result);
+							JsonObject returnData=new JsonParser().parse(result).getAsJsonObject();
+							Log.i("MainActivity",returnData.get("result").toString());
+						}
+					});
+				} else {
+					// 请求失败,使用UI线程更改UI界面
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(MainActivity.this, "请求失败...", Toast.LENGTH_SHORT)
+									.show();
+						}
+					});
+				}
+			};
+		}.start();
+	}
 }
 

@@ -38,4 +38,11 @@
         android:onClick="jsonclick"
         android:text="POST方式提交JSON数据" />
 
+    <Button
+        android:id="@+id/btn_www"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="wwwclick"
+        android:text="POST方式提交x-www-form" />
+
 </LinearLayout>
