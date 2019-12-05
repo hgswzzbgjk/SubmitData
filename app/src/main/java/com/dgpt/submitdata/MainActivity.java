@@ -5,26 +5,34 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends Activity {
 	private EditText et_username;
 	private EditText et_password;
+	private ListView lv;
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		//初始化控件
 		et_password = (EditText) findViewById(R.id.et_password);
 		et_username = (EditText) findViewById(R.id.et_username);
+		lv=(ListView)findViewById(R.id.lv);
+
 	}
 	//HttpURLConnection GET方式
 	public void getclick(View view) {
@@ -168,5 +176,81 @@ public class MainActivity extends Activity {
 			};
 		}.start();
 	}
+
+
+	public void getalluser(View view) {
+		new Thread() {//开启子线程访问网络
+			public void run() {
+				//调用LoginService里面的方法访问网络
+				final String allUser = LoginUtils.getAllUser();
+				if (allUser != null) {
+					//ui线程更改界面
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(MainActivity.this, allUser, Toast.LENGTH_SHORT).show();
+							Log.i("MainActivityresult", allUser);
+							Gson gson = new Gson();
+							JsonParser jsonParser = new JsonParser();
+							JsonArray jsonElements = jsonParser.parse(allUser).getAsJsonArray();//获取JsonArray对象
+							List<UserInfo> userInfos =new ArrayList<UserInfo>();
+							for (JsonElement bean : jsonElements) {
+								UserInfo user = gson.fromJson(bean, UserInfo.class);//解析
+								userInfos.add(user);
+							}
+							MyAdpter adpter=new MyAdpter(MainActivity.this, userInfos);
+							lv.setAdapter(adpter);
+
+						}
+					});
+				} else {
+					// 请求失败,使用UI线程更改UI界面
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(MainActivity.this, "请求失败...", Toast.LENGTH_SHORT)
+									.show();
+						}
+					});
+				}
+			};
+		}.start();
+	}
+
+	//HttpURLConnection POST 获取所有用户
+	public void getallusernew(View view) {
+		//首先获取界面用户输入的用户名和密码
+		new Thread() {//开启子线程访问网络
+			public void run() {
+				//调用LoginService里面的方法访问网络
+				final String allUserNew = LoginUtils.getAllUserNew();
+				if (allUserNew != null) {
+					//ui线程更改界面
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(MainActivity.this, allUserNew, Toast.LENGTH_SHORT).show();
+							Log.i("MainActivityresult", allUserNew);
+							Gson gson = new Gson();
+							Result result = gson.fromJson(allUserNew, Result.class);
+							List<UserInfo> userInfos =  result.getData();
+							MyAdpter adpter=new MyAdpter(MainActivity.this, userInfos);
+							lv.setAdapter(adpter);
+						}
+					});
+				} else {
+					// 请求失败,使用UI线程更改UI界面
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(MainActivity.this, "请求失败...", Toast.LENGTH_SHORT)
+									.show();
+						}
+					});
+				}
+			};
+		}.start();
+	}
+
 }
 

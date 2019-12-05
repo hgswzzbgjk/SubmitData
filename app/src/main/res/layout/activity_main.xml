@@ -45,4 +45,23 @@
         android:onClick="wwwclick"
         android:text="POST方式提交x-www-form" />
 
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="getalluser"
+        android:text="获得所有用户信息" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="getallusernew"
+        android:text="获得所有用户信息新" />
+
+    <ListView
+        android:id="@+id/lv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </LinearLayout>

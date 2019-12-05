@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Map;
 
 public class LoginUtils {
@@ -169,6 +170,7 @@ public class LoginUtils {
 		}
 		return null;
 	}
+
 	/*
 	 * Function  :   封装请求体信息
 	 * Param     :   params请求体内容，encode编码格式
@@ -187,6 +189,71 @@ public class LoginUtils {
 			e.printStackTrace();
 		}
 		return stringBuffer;
+	}
+
+	//使用HttpURLConnection  获取数据
+	public static String getAllUser() {
+		List<UserInfo>list;
+		try {
+			//要访问的资源路径
+			String path = "http://192.168.97.229:83/register/getAllUser.php";
+			//创建URL的实例
+			URL url = new URL(path);
+			//获取HttpURLConnection对象
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+			//设置超时时间
+			conn.setConnectTimeout(5000);
+			//指定请求方式
+			conn.setRequestMethod("POST");
+			//设置请求头
+
+			int code = conn.getResponseCode(); //那到服务器返回的状态码
+			if (code == 200) {
+				//得到服务器返回的输入流
+				InputStream is = conn.getInputStream();
+				//将输入流转换成字符串
+				String text = StreamTools.readInputStream(is);
+				return text;
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	//使用HttpURLConnection  获取数据
+	public static String getAllUserNew() {
+		List<UserInfo>list;
+		try {
+			//要访问的资源路径
+			String path = "http://192.168.97.229:83/register/getAllUserNew.php";
+			//创建URL的实例
+			URL url = new URL(path);
+			//获取HttpURLConnection对象
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+			//设置超时时间
+			conn.setConnectTimeout(5000);
+			//指定请求方式
+			conn.setRequestMethod("POST");
+			//设置请求头
+
+			int code = conn.getResponseCode(); //那到服务器返回的状态码
+			if (code == 200) {
+				//得到服务器返回的输入流
+				InputStream is = conn.getInputStream();
+				//将输入流转换成字符串
+				String text = StreamTools.readInputStream(is);
+				return text;
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
 
